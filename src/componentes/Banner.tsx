@@ -7,7 +7,7 @@ export const Banner = () => {
             <img 
                 src={bannerImg} 
                 alt="Banner principal da Clínica MedVida"
-                style={{ width: '100%', height: 'auto', display: 'block' }} 
+                style={{ width: '100%',  height: 'auto', display: 'block' }} 
             />
         </header>
     )

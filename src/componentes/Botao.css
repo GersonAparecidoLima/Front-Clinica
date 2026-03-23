@@ -1,0 +1,30 @@
+/* src/componentes/Botao.css */
+.botao-clinica {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.primario {
+    background-color: #004a87; /* Azul MedVida */
+    color: white;
+}
+
+.perigo {
+    background-color: #d32f2f; /* Vermelho para cancelar/excluir */
+    color: white;
+}
+
+.sucesso {
+    background-color: #2e7d32; /* Verde para confirmar/finalizar */
+    color: white;
+}
+
+.botao-clinica:hover {
+    filter: brightness(1.2); /* Dá um brilho ao passar o mouse */
+}
