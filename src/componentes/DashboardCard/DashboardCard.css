@@ -1,0 +1,37 @@
+.dashboard-item {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    overflow: hidden;
+    width: 250px;
+    height: 85px;
+    margin: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.barra-lateral {
+    width: 10px;
+}
+
+.conteudo-card {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.label-card {
+    color: #666;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.valor-card {
+    color: #222;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 2px;
+}

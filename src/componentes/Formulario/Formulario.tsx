@@ -1,34 +1,76 @@
-// src/componentes/Formulario.tsx
-
-import { CampoTexto } from '../CampoTexto/CampoTexto'; // Vamos criar este em seguida
-import { Botao } from '../Botao/Botao';
+import { useState } from 'react'
+import { CampoTexto } from '../CampoTexto/CampoTexto'
+import { Botao } from '../Botao/Botao'
 import './Formulario.css'
 
+// 1. A Interface (O contrato com a Home)
+interface Profissional {
+    nome: string;
+    crm: string;
+    especialidade: string;
+}
+
 interface FormularioProps {
-    aoSalvar: () => void;
+    //aoSalvar: (profissional: any) => void; // Mudei para aceitar os dados
+    aoSalvar: (profissional: Profissional) => void;
     aoCancelar: () => void;
 }
 
 export const Formulario = (props: FormularioProps) => {
+    
+    // 2. Estados (Memória do formulário)
+    const [nome, setNome] = useState('')
+    const [crm, setCrm] = useState('')
+    const [especialidade, setEspecialidade] = useState('')
 
-    const submeter = (evento: React.FormEvent) => {
-        evento.preventDefault(); // Evita que a página recarregue
-        props.aoSalvar();
+    // 3. Função que lida com o envio
+    const aoEnviar = (evento: React.FormEvent) => {
+        evento.preventDefault();
+        
+        // Enviamos o objeto com os dados para a Home
+        props.aoSalvar({
+            nome,
+            crm,
+            especialidade
+        });
+
+        // Limpa os campos após salvar
+        setNome('');
+        setCrm('');
+        setEspecialidade('');
     }
 
+    // 4. Apenas UM return com todo o JSX
     return (
-        <section className="formulario-container">
-            <form onSubmit={submeter}>
-                <h2>Cadastro de Profissional</h2>
+        <section className="formulario formulario-container">
+            <form onSubmit={aoEnviar}>
+                <h2>Preencha os dados do Profissional</h2>
                 
-                <CampoTexto label="Nome" placeholder="Digite o nome do médico" />
-                <CampoTexto label="CRM" placeholder="Digite o CRM" />
-                <CampoTexto label="Especialidade" placeholder="Ex: Cardiologia" />
+                <CampoTexto 
+                    label="Nome" 
+                    placeholder="Digite seu nome" 
+                    valor={nome}
+                    aoAlterar={valor => setNome(valor)} 
+                    obrigatorio={true}
+                />
+
+                <CampoTexto 
+                    label="CRM" 
+                    placeholder="Digite seu CRM" 
+                    valor={crm}
+                    aoAlterar={valor => setCrm(valor)}
+                />
+
+                <CampoTexto 
+                    label="Especialidade" 
+                    placeholder="Digite sua especialidade" 
+                    valor={especialidade}
+                    aoAlterar={valor => setEspecialidade(valor)}
+                />
 
                 <div className="acoes">
-                    <Botao texto="Gravar Médico" tipo="sucesso" acao={() => {}} /> 
-                    {/* Nota: O botão dentro do form com type submit dispara o onSubmit do form */}
-                    <Botao texto="Limpar" tipo="perigo" acao={props.aoCancelar} />
+                     <Botao texto="Criar Profissional"  isSubmit={true} />
+                     <Botao texto="Cancelar" tipo="perigo" acao={props.aoCancelar}  isSubmit={false} />
                 </div>
             </form>
         </section>
