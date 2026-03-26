@@ -1,29 +1,28 @@
 // src/Home.tsx
-import { Banner } from './componentes/Banner'
-import { Botao } from './componentes/Botao'
-
+import { Banner } from './componentes/Banner/Banner'
+import { Formulario } from './componentes/Formulario/Formulario';
 function Home() {
-    const salvarMedico = () => console.log("Enviando para o Oracle via Spring Boot...");
-    const cancelar = () => console.log("Operação cancelada.");
+    // 1. Defina as funções de lógica uma única vez
+    const salvarMedico = () => {
+        console.log("Enviando para o Oracle via Spring Boot...");
+    };
+
+    const cancelar = () => {
+        console.log("Operação cancelada/Limpa.");
+    };
 
     return (
         <div className="container">
-            {/* 1. Topo: Banner ocupa a largura toda */}
-            {/* <Banner /> */}
-
-            {/* 2. Cabeçalho: Apenas Logo e Menu */}
-         <header className="header">
-                {/* 1. Lado Esquerdo: Identidade */}
+            {/* 1. Cabeçalho com Logo, Banner e Nav */}
+            <header className="header">
                 <div className="logo">
                     <h1>Clínica MedVida</h1>
                 </div>
 
-                {/* 2. Centro: O Banner que você sugeriu */}
                 <div className="header-banner">
                     <Banner />
                 </div>
 
-                {/* 3. Lado Direito: Navegação */}
                 <nav className="nav">
                     <ul>
                         <li><a href="#agendamentos">Agendamentos</a></li>
@@ -33,20 +32,17 @@ function Home() {
                 </nav>
             </header>
 
-            {/* 3. Conteúdo: Aqui é onde acontece */}
+            {/* 2. Conteúdo Principal */}
             <main className="main-content">
                 <h2>Gerenciamento de Médicos</h2>
                 
-                {/* Aqui futuramente entrará o seu Formulário */}
-                <div className="formulario-simulado">
-                    <p>Preencha os dados do profissional abaixo:</p>
-                    
-                    {/* Botões agora ficam na área de trabalho, não no menu */}
-                    <div className="acoes-formulario">
-                        <Botao texto="Gravar Médico" tipo="sucesso" acao={salvarMedico} />
-                        <Botao texto="Desistir" tipo="perigo" acao={cancelar} />
-                    </div>
-                </div>
+                {/* O componente Formulario já tem os botões dentro dele!
+                   Nós apenas passamos as funções como "encomenda" (props)
+                */}
+                <Formulario 
+                    aoSalvar={salvarMedico} 
+                    aoCancelar={cancelar} 
+                />
 
                 <div className="dashboard-cards">
                     <div className="card">Próximas Consultas: 0</div>
@@ -54,7 +50,7 @@ function Home() {
                 </div>
             </main>
         </div>
-    )
+    );
 }
 
-export default Home
+export default Home;

@@ -1,5 +1,5 @@
 // src/componentes/Banner.tsx
-import bannerImg from '../assets/banner.png' // O Vite busca o arquivo físico aqui
+import bannerImg from '../../assets/banner.png' // O Vite busca o arquivo físico aqui
 
 export const Banner = () => {
     return (
