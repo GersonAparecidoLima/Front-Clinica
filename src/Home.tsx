@@ -1,25 +1,43 @@
-// src/Home.tsx
 import { Banner } from './componentes/Banner/Banner'
 import { Formulario } from './componentes/Formulario/Formulario';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card } from './componentes/Card/Card';
 import { DashboardCard } from './componentes/DashboardCard/DashboardCard';
-
-interface Medico {
-  nome: string;
-  crm: string;
-  especialidade: string;
-}
+import medicoService, { type Medico } from './services/medicoService';
 
 function Home() {
     
-    const [medicos, setMedicos] = useState<Medico[]>([]);
 
-    const salvarMedico = (dados: Medico) => {
-        console.log("Recebi os dados no Pai (Home):", dados.nome, dados.especialidade, dados.crm );
-        setMedicos(prev => [...prev, dados]);
-    };
+    // 1. Carregar os dados (GET) ao abrir a página
+useEffect(() => {
+    medicoService.listar()
+        .then((dados: any) => { // Usamos 'any' aqui para o TS aceitar o .content
+            console.log("Dados vindos do Java:", dados);
+            
+            // Verifica se os médicos estão dentro de 'content' (padrão Page do Spring)
+            // ou se vieram em uma lista direta
+            const listaDeMedicos = dados.content ? dados.content : dados;
+            
+            setMedicos(Array.isArray(listaDeMedicos) ? listaDeMedicos : []);
+        })
+        .catch(err => console.error("Erro ao buscar médicos:", err));
+}, []);
 
+const [medicos, setMedicos] = useState<Medico[]>([]);
+
+    // 2. Salvar o médico (POST)
+    // Salvar o médico enviando para o Java
+        const salvarMedico = async (dados: Medico) => {
+            try {
+                const novoMedico = await medicoService.cadastrar(dados);
+                setMedicos(prev => [...prev, novoMedico]);
+                console.log("Médico salvo no Oracle com sucesso!");
+            } catch (erro) {
+                console.error("Erro ao salvar médico:", erro);
+                alert("Erro ao conectar com o servidor Java!");
+            }
+        };
+        
     const cancelar = () => {
         console.log("Operação cancelada/Limpa.");
     };
@@ -69,9 +87,9 @@ function Home() {
                 <section className="lista-profissionais" style={{ padding: '40px', display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
                     {medicos.map((medico) => (
                         <Card 
-                            key={medico.crm} 
-                            nome={medico.nome} 
-                            crm={medico.crm} 
+                            key={medico.id || medico.crm} 
+                            nome={medico.nome}           // Verifique se 'medico.nome' existe
+                            crm={medico.crm}             // Verifique se 'medico.crm' existe
                             especialidade={medico.especialidade} 
                         />
                     ))}

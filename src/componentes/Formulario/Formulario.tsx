@@ -2,55 +2,67 @@ import { useState } from 'react'
 import { CampoTexto } from '../CampoTexto/CampoTexto'
 import { Botao } from '../Botao/Botao'
 import './Formulario.css'
-
-// 1. A Interface (O contrato com a Home)
-interface Profissional {
-    nome: string;
-    crm: string;
-    especialidade: string;
-}
+// Importamos o tipo Medico do service para manter tudo sincronizado
+import { type Medico } from '../../services/medicoService'
 
 interface FormularioProps {
-    //aoSalvar: (profissional: any) => void; // Mudei para aceitar os dados
-    aoSalvar: (profissional: Profissional) => void;
+    // Agora usamos a interface Medico que tem email e endereço
+    aoSalvar: (profissional: Medico) => void;
     aoCancelar: () => void;
 }
 
 export const Formulario = (props: FormularioProps) => {
     
-    // 2. Estados (Memória do formulário)
     const [nome, setNome] = useState('')
+    const [email, setEmail] = useState('') // Novo estado para o E-mail
     const [crm, setCrm] = useState('')
     const [especialidade, setEspecialidade] = useState('')
 
-    // 3. Função que lida com o envio
     const aoEnviar = (evento: React.FormEvent) => {
         evento.preventDefault();
         
-        // Enviamos o objeto com os dados para a Home
+        // Montamos o objeto completo para o Spring Boot/Oracle
         props.aoSalvar({
             nome,
+            email,
             crm,
-            especialidade
+            especialidade,
+            endereco: {
+                logradouro: "Avenida Principal",
+                bairro: "Paranoá",
+                cep: "71570000",
+                cidade: "Brasília",
+                uf: "DF",
+                numero: "10"
+            }
         });
 
-        // Limpa os campos após salvar
+        // Limpa os campos
         setNome('');
+        setEmail('');
         setCrm('');
         setEspecialidade('');
     }
 
-    // 4. Apenas UM return com todo o JSX
     return (
         <section className="formulario formulario-container">
             <form onSubmit={aoEnviar}>
-                <h2>Preencha os dados do Profissional</h2>
+                <h2>Cadastrar Médico</h2>
                 
                 <CampoTexto 
                     label="Nome" 
                     placeholder="Digite seu nome" 
                     valor={nome}
                     aoAlterar={valor => setNome(valor)} 
+                    obrigatorio={true}
+                />
+
+                {/* NOVO CAMPO: E-mail */}
+                <CampoTexto 
+                    label="E-mail" 
+                    placeholder="Digite seu e-mail" 
+                    valor={email}
+                    aoAlterar={valor => setEmail(valor)} 
                     obrigatorio={true}
                 />
 
@@ -63,14 +75,14 @@ export const Formulario = (props: FormularioProps) => {
 
                 <CampoTexto 
                     label="Especialidade" 
-                    placeholder="Digite sua especialidade" 
+                    placeholder="Ex: CARDIOLOGIA (use maiúsculas para o Enum)" 
                     valor={especialidade}
                     aoAlterar={valor => setEspecialidade(valor)}
                 />
 
                 <div className="acoes">
-                     <Botao texto="Criar Profissional"  isSubmit={true} />
-                     <Botao texto="Cancelar" tipo="perigo" acao={props.aoCancelar}  isSubmit={false} />
+                     <Botao texto="Cadastrar Médico" isSubmit={true} />
+                     <Botao texto="Cancelar" tipo="perigo" acao={props.aoCancelar} isSubmit={false} />
                 </div>
             </form>
         </section>
