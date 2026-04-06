@@ -1,33 +1,88 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CampoTexto } from '../CampoTexto/CampoTexto'
 import { Botao } from '../Botao/Botao'
 import './Formulario.css'
 // Importamos o tipo Medico do service para manter tudo sincronizado
 import { type Medico } from '../../services/medicoService'
+import {CampoSelecao} from '../CampoSelecao/CampoSelecao'
 
 interface FormularioProps {
-    // Agora usamos a interface Medico que tem email e endereço
+    medicoParaEdicao?: Medico; // Opcional
     aoSalvar: (profissional: Medico) => void;
     aoCancelar: () => void;
 }
 
-export const Formulario = (props: FormularioProps) => {
+const especialidades = [
+    'CARDIOLOGIA', // Tem que estar igual ao Banco/Enum
+    'ORTOPEDIA',
+    'GINECOLOGIA',
+    'DERMATOLOGIA'
+]
+
+export const Formulario = ({ medicoParaEdicao, aoSalvar, aoCancelar }: FormularioProps) => {
     
-    const [nome, setNome] = useState('')
-    const [email, setEmail] = useState('') // Novo estado para o E-mail
-    const [crm, setCrm] = useState('')
-    const [especialidade, setEspecialidade] = useState('')
+    // Iniciamos o estado com os dados do médico caso ele exista (Edição)
+    // ou vazio (Cadastro)
+    // No topo do componente:
+    // No Formulario.tsx, altere a linha da especialidade para isto:
+    const [especialidade, setEspecialidade] = useState(medicoParaEdicao?.especialidade?.trim().toUpperCase() || '');
+    //const [especialidade, setEspecialidade] = useState(medicoParaEdicao?.especialidade?.trim().toUpperCase() || '');
+    const [nome, setNome] = useState(medicoParaEdicao?.nome || '');
+    const [email, setEmail] = useState(medicoParaEdicao?.email || '');
+    const [crm, setCrm] = useState(medicoParaEdicao?.crm || '');
+    //const [especialidade, setEspecialidade] = useState(medicoParaEdicao?.especialidade || '');
+
+// 2º: ADICIONAMOS O EFFECT AQUI (O "Sincronizador")
+    // Ele serve para limpar os campos ou preenchê-los quando o médico mudar
+/*
+useEffect(() => {
+    console.log("DADO BRUTO QUE CHEGOU DO JAVA:", medicoParaEdicao?.especialidade);
+    setNome(medicoParaEdicao?.nome || '');
+    setEmail(medicoParaEdicao?.email || '');
+    setCrm(medicoParaEdicao?.crm || '');
+    
+    // O .trim() remove espaços antes e depois. 
+    // O .toUpperCase() garante que bata com o seu array de especialidades.
+    const especialidadeLimpa = medicoParaEdicao?.especialidade?.trim().toUpperCase() || '';
+    setEspecialidade(especialidadeLimpa);
+    
+}, [medicoParaEdicao]);
+*/
+
+useEffect(() => {
+
+console.log("MÉDICO COMPLETO QUE CHEGOU:", medicoParaEdicao);
+
+    // Só tentamos preencher se o médico PARA EDIÇÃO existir
+    if (medicoParaEdicao) {
+        console.log("DADO REAL QUE CHEGOU:", medicoParaEdicao.especialidade);
+        
+        setNome(medicoParaEdicao.nome || '');
+        setEmail(medicoParaEdicao.email || '');
+        setCrm(medicoParaEdicao.crm || '');
+        
+        const especialidadeLimpa = medicoParaEdicao.especialidade?.trim().toUpperCase() || '';
+        setEspecialidade(especialidadeLimpa);
+    } else {
+        // Se não tem médico (é um cadastro novo), limpamos os campos
+        setNome('');
+        setEmail('');
+        setCrm('');
+        setEspecialidade('');
+    }
+}, [medicoParaEdicao]);
 
     const aoEnviar = (evento: React.FormEvent) => {
         evento.preventDefault();
         
-        // Montamos o objeto completo para o Spring Boot/Oracle
-        props.aoSalvar({
+        aoSalvar({
+            // Se for edição, precisamos manter o ID para o Spring Boot saber qual registro dar o UPDATE
+            id: medicoParaEdicao?.id, 
             nome,
             email,
             crm,
             especialidade,
-            endereco: {
+            endereco: medicoParaEdicao?.endereco || {
                 logradouro: "Avenida Principal",
                 bairro: "Paranoá",
                 cep: "71570000",
@@ -36,18 +91,12 @@ export const Formulario = (props: FormularioProps) => {
                 numero: "10"
             }
         });
-
-        // Limpa os campos
-        setNome('');
-        setEmail('');
-        setCrm('');
-        setEspecialidade('');
     }
 
     return (
         <section className="formulario formulario-container">
             <form onSubmit={aoEnviar}>
-                <h2>Cadastrar Médico</h2>
+                <h2>{medicoParaEdicao ? 'Editando Médico' : 'Cadastrar Médico'}</h2>
                 
                 <CampoTexto 
                     label="Nome" 
@@ -72,19 +121,18 @@ export const Formulario = (props: FormularioProps) => {
                     valor={crm}
                     aoAlterar={valor => setCrm(valor)}
                 />
-
-                <CampoTexto 
+       <CampoSelecao 
+                    obrigatorio={true}
                     label="Especialidade" 
-                    placeholder="Ex: CARDIOLOGIA (use maiúsculas para o Enum)" 
+                    itens={especialidades}
                     valor={especialidade}
                     aoAlterar={valor => setEspecialidade(valor)}
                 />
-
                 <div className="acoes">
-                     <Botao texto="Cadastrar Médico" isSubmit={true} />
-                     <Botao texto="Cancelar" tipo="perigo" acao={props.aoCancelar} isSubmit={false} />
+                     <Botao texto={medicoParaEdicao ? "Salvar Alterações" : "Cadastro"} isSubmit={true} />
+                     <Botao texto="Cancelar" tipo="perigo" acao={aoCancelar} isSubmit={false} />
                 </div>
             </form>
         </section>
-    )
+    );
 }

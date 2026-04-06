@@ -1,0 +1,35 @@
+/* src/componentes/CampoSelecao/CampoSelecao.css */
+
+.campo-selecao {
+    margin: 24px 0;
+    text-align: left;
+}
+
+.campo-selecao label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #004a87; /* Azul da clínica que você definiu */
+}
+
+.campo-selecao select {
+    background-color: #FFF;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.06);
+    width: 100%;
+    border: none;
+    font-size: 16px; /* Igual ao input */
+    padding: 16px;   /* Igual ao input */
+    box-sizing: border-box;
+    border-radius: 10px; /* Arredondamento idêntico */
+    outline: none;   /* Evita aquela borda azul padrão do navegador ao clicar */
+    color: #333;     /* Cor do texto para não ficar muito claro */
+    cursor: pointer;
+}
+
+/* Garante que as opções dentro do select herdem o estilo básico */
+.campo-selecao option {
+    font-size: 16px;
+    padding: 16px;
+    background-color: #FFF;
+}
