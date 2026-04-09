@@ -34,20 +34,6 @@ export const Formulario = ({ medicoParaEdicao, aoSalvar, aoCancelar }: Formulari
 
 // 2º: ADICIONAMOS O EFFECT AQUI (O "Sincronizador")
     // Ele serve para limpar os campos ou preenchê-los quando o médico mudar
-/*
-useEffect(() => {
-    console.log("DADO BRUTO QUE CHEGOU DO JAVA:", medicoParaEdicao?.especialidade);
-    setNome(medicoParaEdicao?.nome || '');
-    setEmail(medicoParaEdicao?.email || '');
-    setCrm(medicoParaEdicao?.crm || '');
-    
-    // O .trim() remove espaços antes e depois. 
-    // O .toUpperCase() garante que bata com o seu array de especialidades.
-    const especialidadeLimpa = medicoParaEdicao?.especialidade?.trim().toUpperCase() || '';
-    setEspecialidade(especialidadeLimpa);
-    
-}, [medicoParaEdicao]);
-*/
 
 useEffect(() => {
 

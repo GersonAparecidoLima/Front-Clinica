@@ -1,0 +1,52 @@
+/* Formulario.css */
+
+.formulario-container {
+    background-color: #f4f7f6;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.formulario-container h2 {
+    color: #2c3e50;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaçamento entre os campos */
+}
+
+/* Estilização para o agrupamento dos botões */
+.acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Efeito de hover para o container */
+.formulario-container:hover {
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Ajuste para dispositivos móveis */
+@media (max-width: 480px) {
+    .formulario-container {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .acoes {
+        flex-direction: column; /* Botões um em cima do outro no celular */
+    }
+}

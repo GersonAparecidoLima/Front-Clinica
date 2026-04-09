@@ -1,0 +1,61 @@
+/* Estilo para os botões que estão dentro do <li> no Nav */
+.nav ul {
+    display: flex;
+    list-style: none; /* Remove as bolinhas da lista */
+    gap: 20px;
+    padding: 0;
+    justify-content: center;
+}
+
+.nav ul li button {
+    background: none;        /* Remove o fundo cinza de botão */
+    border: none;            /* Remove a borda padrão */
+    color: white;            /* Cor do texto (ajuste conforme seu header) */
+    font-size: 1rem;         /* Tamanho da letra */
+    font-weight: 500;
+    cursor: pointer;         /* Aparece a "mãozinha" */
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    text-transform: uppercase; /* Deixa o menu em CAIXA ALTA se preferir */
+}
+
+.nav ul li button:hover {
+    color: #FFCA28;          /* Cor de destaque (Amarelo) ao passar o mouse */
+    text-decoration: underline;
+}
+
+/* Quando o botão está com o estilo inline 'bold', ele ganha um destaque extra */
+.nav ul li button[style*="font-weight: bold"] {
+    color: #FFCA28;
+    border-bottom: 2px solid #FFCA28;
+}
+
+/* Estilo base para os links da navegação */
+.nav a {
+    text-decoration: none;
+    color: #3498db; 
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    
+    /* A mágica acontece aqui */
+    cursor: pointer; 
+    
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+/* Quando o mouse passa por cima (Hover) */
+.nav a:hover {
+    color: #2c3e50;
+    /* Garante que a mãozinha apareça no hover também */
+    cursor: pointer; 
+    background-color: rgba(52, 152, 219, 0.1); /* Um leve fundo azul ao passar o mouse */
+    border-radius: 4px;
+}
+
+/* Estilo para o link da tela que está aberta */
+.link-ativo {
+    font-weight: bold;
+    color: #2c3e50 !important;
+    border-bottom: 2px solid #3498db;
+}
