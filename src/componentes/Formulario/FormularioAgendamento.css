@@ -1,0 +1,48 @@
+.formulario-clinica {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e6ed;
+}
+
+.formulario-clinica h3 {
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #f0f4f8;
+    padding-bottom: 15px;
+}
+
+.campo-grupo label {
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-select, .form-control {
+    border: 1px solid #cbd5e0;
+    padding: 10px;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+    outline: none;
+}
+
+.acoes-formulario {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f4f8;
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões à direita */
+}
+
+/* Estilo para o datetime-local ficar mais amigável */
+input[type="datetime-local"] {
+    cursor: pointer;
+}

@@ -6,42 +6,46 @@ import './Formulario.css'
 import { type Paciente } from '../../services/pacienteService'
 
 interface FormularioPacienteProps {
-    pacienteParaEdicao?: Paciente;
+    pacienteSelecionado?: Paciente; 
     aoSalvar: (paciente: Paciente) => void;
     aoCancelar: () => void;
 }
 
-export const FormularioPaciente = ({ pacienteParaEdicao, aoSalvar, aoCancelar }: FormularioPacienteProps) => {
-    
-    const [nome, setNome] = useState(pacienteParaEdicao?.nome || '');
-    const [email, setEmail] = useState(pacienteParaEdicao?.email || '');
-    const [cpf, setCpf] = useState(pacienteParaEdicao?.cpf || '');
-    const [telefone, setTelefone] = useState(pacienteParaEdicao?.telefone || '');
+export const FormularioPaciente = ({ aoSalvar, aoCancelar, pacienteSelecionado }: FormularioPacienteProps) => {
+//export const FormularioPaciente = ({ pacienteParaEdicao, aoSalvar, aoCancelar, pacienteSelecionado }: FormularioPacienteProps) => {
 
+    
+// 1. Iniciamos os estados com o pacienteSelecionado
+    const [nome, setNome] = useState(pacienteSelecionado?.nome || '');
+    const [email, setEmail] = useState(pacienteSelecionado?.email || '');
+    const [cpf, setCpf] = useState(pacienteSelecionado?.cpf || '');
+    const [telefone, setTelefone] = useState(pacienteSelecionado?.telefone || '');
+
+// 2. O useEffect monitora o pacienteSelecionado
     useEffect(() => {
-        if (pacienteParaEdicao) {
-            setNome(pacienteParaEdicao.nome || '');
-            setEmail(pacienteParaEdicao.email || '');
-            setCpf(pacienteParaEdicao.cpf || '');
-            setTelefone(pacienteParaEdicao.telefone || '');
+        if (pacienteSelecionado) {
+            setNome(pacienteSelecionado.nome || '');
+            setEmail(pacienteSelecionado.email || '');
+            setCpf(pacienteSelecionado.cpf || '');
+            setTelefone(pacienteSelecionado.telefone || '');
         } else {
             setNome('');
             setEmail('');
             setCpf('');
             setTelefone('');
         }
-    }, [pacienteParaEdicao]);
+    }, [pacienteSelecionado]); // <--- Monitora o nome correto agora
 
-    const aoEnviar = (evento: React.FormEvent) => {
+const aoEnviar = (evento: React.FormEvent) => {
         evento.preventDefault();
         
         aoSalvar({
-            id: pacienteParaEdicao?.id, 
+            id: pacienteSelecionado?.id, // <--- Usa o ID do selecionado
             nome,
             email,
             cpf,
             telefone,
-            endereco: pacienteParaEdicao?.endereco || {
+            endereco: pacienteSelecionado?.endereco || {
                 logradouro: "Avenida Principal",
                 bairro: "Paranoá",
                 cep: "71570000",
@@ -55,7 +59,7 @@ export const FormularioPaciente = ({ pacienteParaEdicao, aoSalvar, aoCancelar }:
     return (
         <section className="formulario formulario-container">
             <form onSubmit={aoEnviar}>
-                <h2>{pacienteParaEdicao ? 'Editando Paciente' : 'Cadastrar Paciente'}</h2>
+                <h2>{pacienteSelecionado ? 'Editando Paciente' : 'Cadastrar Paciente'}</h2>
                 
                 <CampoTexto 
                     label="Nome" 
@@ -89,7 +93,7 @@ export const FormularioPaciente = ({ pacienteParaEdicao, aoSalvar, aoCancelar }:
                 />
 
                 <div className="acoes">
-                     <Botao texto={pacienteParaEdicao ? "Salvar Alterações" : "Cadastrar Paciente"} isSubmit={true} />
+                     <Botao texto={pacienteSelecionado ? "Salvar Alterações" : "Cadastrar Paciente"} isSubmit={true} />
                      <Botao texto="Cancelar" tipo="perigo" acao={aoCancelar} isSubmit={false} />
                 </div>
             </form>

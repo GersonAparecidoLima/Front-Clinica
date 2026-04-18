@@ -6,9 +6,11 @@ import { FormularioPaciente } from './componentes/Formulario/FormularioPaciente'
 import { Botao } from './componentes/Botao/Botao'; // Importe seu componente de Botão
 import pacienteService, { type Paciente } from './services/pacienteService';
 
+
 export function Pacientes() {
     const [pacientes, setPacientes] = useState<Paciente[]>([]);
     const [exibirFormulario, setExibirFormulario] = useState(false); // Estado para controlar a visibilidade
+    const [pacienteParaEditar, setPacienteParaEditar] = useState<any>(null);
 
     // 1. Carregar Pacientes
     const carregarPacientes = () => {
@@ -25,22 +27,36 @@ export function Pacientes() {
             .catch(err => console.error("Erro ao buscar pacientes:", err));
     };
 
+    // Função que será chamada ao clicar no botão Editar do Card
+        const abrirEdicao = (paciente: any) => {
+            setPacienteParaEditar(paciente);
+        };
+
     useEffect(() => {
         carregarPacientes();
     }, []);
 
     // 2. Função para Salvar (Chamada pelo Formulário)
-    const salvarPaciente = async (paciente: Paciente) => {
-        try {
-            await pacienteService.cadastrar(paciente); // Supondo que você tenha o método cadastrar no service
-            setExibirFormulario(false);
-            carregarPacientes(); // Atualiza a lista após salvar
-            alert("Paciente salvo com sucesso!");
-        } catch (erro) {
-            console.error("Erro ao salvar:", erro);
-            alert("Erro ao salvar paciente.");
+const salvarPaciente = async (paciente: Paciente) => {
+    try {
+        if (paciente.id) {
+            // Se tem ID, chama o atualizar que criamos no api.ts / service
+            await pacienteService.atualizar(paciente); 
+            alert("Paciente atualizado com sucesso!");
+        } else {
+            // Se não tem ID, é um cadastro novo
+            await pacienteService.cadastrar(paciente);
+            alert("Paciente cadastrado com sucesso!");
         }
-    };
+        
+        setExibirFormulario(false);
+        setPacienteParaEditar(null); // Limpa o estado
+        carregarPacientes(); // Atualiza a lista vinda do Java
+    } catch (erro) {
+        console.error("Erro ao salvar:", erro);
+        alert("Erro ao processar a requisição.");
+    }
+};
 
     const excluirPaciente = async (id: number) => {
         if (window.confirm("Deseja realmente inativar este paciente?")) {
@@ -68,33 +84,35 @@ export function Pacientes() {
             </div>
 
             {exibirFormulario ? (
-                <FormularioPaciente 
-                    aoSalvar={salvarPaciente} 
-                    aoCancelar={() => setExibirFormulario(false)} 
+    <FormularioPaciente 
+        pacienteSelecionado={pacienteParaEditar} // <--- Passamos o paciente que guardamos no estado
+        aoSalvar={salvarPaciente} 
+        aoCancelar={() => {
+            setExibirFormulario(false);
+            setPacienteParaEditar(null); // Limpa para não misturar com o próximo
+        }} 
+    />
+) : (
+    <>
+        {/* ... dashboard ... */}
+        <section className="lista-wrapper">
+            {pacientes?.map((paciente) => (
+                <CardPaciente 
+                    key={paciente.id || paciente.cpf} 
+                    nome={paciente.nome}
+                    cpf={paciente.cpf}
+                    email={paciente.email}
+                    aoExcluirClick={() => excluirPaciente(paciente.id!)}
+                    // AQUI ESTÁ A MÁGICA:
+                    aoEditarClick={() => {
+                        setPacienteParaEditar(paciente); // 1. Guarda o paciente clicado
+                        setExibirFormulario(true);       // 2. Abre o formulário
+                    }}
                 />
-            ) : (
-                <>
-                    <div className="dashboard-wrapper">
-                        <DashboardCard 
-                            label="Pacientes Ativos" 
-                            valor={pacientes.length} 
-                            corDestaque="#2e7d32" 
-                        />
-                    </div>
-
-                    <section className="lista-wrapper">
-                        {pacientes?.map((paciente) => (
-                            <CardPaciente 
-                                key={paciente.id || paciente.cpf} 
-                                nome={paciente.nome}
-                                cpf={paciente.cpf}
-                                email={paciente.email}
-                                aoExcluirClick={() => excluirPaciente(paciente.id!)}
-                            />
-                        ))}
-                    </section>
-                </>
-            )}
+            ))}
+        </section>
+    </>
+)}
         </main>
     </div>
 );

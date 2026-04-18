@@ -1,12 +1,9 @@
-
 import Medicos from './Medicos.tsx';
 import { Pacientes } from './Pacientes.tsx';
-
+// 1. Importe o novo componente de Agendamento
+import { AgendamentoConsulta } from './AgendamentoConsulta.tsx'; 
 
 import { useState } from 'react'
-//import Medicos from './Medicos'; // Sua antiga Home renomeada
-//import { Pacientes } from './Pacientes';
-// import { Consultas } from './Consultas'; // Quando você criar o arquivo de consultas
 import { Banner } from './componentes/Banner/Banner';
 
 type Tela = 'medicos' | 'pacientes' | 'consultas';
@@ -24,7 +21,10 @@ function App() {
                         <li>
                             <a
                                 href="#"
-                                onClick={() => setTelaAtiva('consultas')}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setTelaAtiva('consultas');
+                                }}
                                 style={{ fontWeight: telaAtiva === 'consultas' ? 'bold' : 'normal' }}
                             >
                                 Agendamentos
@@ -33,7 +33,10 @@ function App() {
                         <li>
                             <a
                                 href="#"
-                                onClick={() => setTelaAtiva('medicos')}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setTelaAtiva('medicos');
+                                }}
                                 style={{ fontWeight: telaAtiva === 'medicos' ? 'bold' : 'normal' }}
                             >
                                 Médicos
@@ -43,7 +46,7 @@ function App() {
                             <a
                                 href="#"
                                 onClick={(e) => {
-                                    e.preventDefault(); // Impede o # na URL
+                                    e.preventDefault();
                                     setTelaAtiva('pacientes');
                                 }}
                                 style={{ fontWeight: telaAtiva === 'pacientes' ? 'bold' : 'normal' }}
@@ -59,12 +62,9 @@ function App() {
                 {/* Switch de Telas */}
                 {telaAtiva === 'medicos' && <Medicos />}
                 {telaAtiva === 'pacientes' && <Pacientes />}
-                {telaAtiva === 'consultas' && (
-                    <div style={{ textAlign: 'center', padding: '50px' }}>
-                        <h2>Módulo de Agendamentos</h2>
-                        <p>Em breve: Marque consultas entre médicos e pacientes.</p>
-                    </div>
-                )}
+                
+                {/* 2. Substitua o "Em breve" pelo componente real */}
+                {telaAtiva === 'consultas' && <AgendamentoConsulta />}
             </main>
         </div>
     );
